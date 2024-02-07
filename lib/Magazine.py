@@ -1,38 +1,39 @@
 # Magazine.py
 
 class Magazine:
-    all_magazines = []
+    _all_magazines = []
 
     def __init__(self, name, category):
-        self.name = name
-        self.category = category
-        self.additional_info = {}
-        self.published_articles = []
-        self.__class__.all_magazines.append(self)
+        self._name = name
+        self._category = category
+        self._articles = []
+        Magazine._all_magazines.append(self)
 
-    def __str__(self):
-        return f"Magazine: {self.name}, Category: {self.category}, Additional Info: {self.additional_info}"
+    def name(self):
+        return self._name
 
-    @property
+    def category(self):
+        return self._category
+
+    def all():
+        return Magazine._all_magazines
+
     def contributors(self):
-        return list(set(article.author for article in self.published_articles))
+        return list(set(article.author() for article in self._articles))
+
+    def add_article(self, author, title):
+        new_article = Article(author, self, title)
+        self._articles.append(new_article)
+        return new_article
 
     @classmethod
     def find_by_name(cls, name):
-        return next((magazine for magazine in cls.all_magazines if magazine.name == name), None)
+        return next((magazine for magazine in cls._all_magazines if magazine.name() == name), None)
 
-    @property
-    def article_titles(self):
-        return [article.title for article in self.published_articles]
+    @classmethod
+    def article_titles(cls):
+        return [article.title() for magazine in cls._all_magazines for article in magazine._articles]
 
-    def contributing_authors(self):
-        authors_count = {}
-        for article in self.published_articles:
-            author = article.author
-            authors_count[author] = authors_count.get(author, 0) + 1
-        return [author for author, count in authors_count.items() if count > 2]
-
-    def update_info(self, key, value):
-        self.additional_info[key] = value
-
-
+    @classmethod
+    def contributing_authors(cls):
+        return [author for magazine in cls._all_magazines for author in magazine.contributors() if len(author.articles()) > 2]

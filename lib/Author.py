@@ -1,29 +1,29 @@
-# Author.py
-from Article import Article  # Import the Article class
-
 class Author:
-    all_authors = []
+    _all_authors = []  #save the authors
 
     def __init__(self, name):
-        self.name = name
-        self.authored_articles = []
-        self.__class__.all_authors.append(self)
+        self._name = name
+        self._articles = []
+        Author._all_authors.append(self)
 
-    def __str__(self):
-        return f"Author: {self.name}"
+    def name(self):
+        return self._name
 
-    @property
     def articles(self):
-        return self.authored_articles
+        return self._articles
 
-    @property
     def magazines(self):
-        return list(set(article.magazine for article in self.authored_articles))
+        return list(set(article.magazine() for article in self._articles))
 
     def add_article(self, magazine, title):
+        from Article import Article 
         new_article = Article(self, magazine, title)
-        self.authored_articles.append(new_article)
+        self._articles.append(new_article)
+        return new_article
 
-    @property
     def topic_areas(self):
-        return list(set(article.magazine.category for article in self.authored_articles))
+        return list(set(magazine.category() for magazine in self.magazines()))
+
+    @classmethod
+    def all(cls):
+        return cls._all_authors
