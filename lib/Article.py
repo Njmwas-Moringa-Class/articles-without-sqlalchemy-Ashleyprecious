@@ -1,4 +1,3 @@
-# Article.py
 
 class Article:
     all_articles = []
@@ -7,18 +6,18 @@ class Article:
         self.author = author
         self.magazine = magazine
         self.title = title
-        Article._all_articles.append(self)
-        
+        self.__class__.all_articles.append(self)
+        magazine.published_articles.append(self)
+        author.authored_articles.append(self)
 
-    def title(self):
-        return self._title
+    @property
+    def article_title(self):
+        return self.title
 
-    def author(self):
-        return self._author
-    
-    def magazine(self):
-        return self._magazine
-    
-    @classmethod
-    def all(cls):
-        return cls._all_articles
+    @property
+    def author_name(self):
+        return self.author.name
+
+    @property
+    def magazine_name(self):
+        return self.magazine.name
